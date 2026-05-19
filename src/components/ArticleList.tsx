@@ -27,6 +27,7 @@ import { FileText, Trash2, Menu, Plus, Save, Edit2, Check } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { Input } from '@/components/ui/input'
+import { getBuiltInExamples } from '@/lib/utils/loadExampleContent'
 
 interface Article {
   id: string
@@ -50,6 +51,14 @@ export function ArticleList({ onSelect, currentContent, onNew }: ArticleListProp
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const builtInExamples = getBuiltInExamples().map((example) => ({
+    id: example.id,
+    title: example.title,
+    content: example.content,
+    template: example.template,
+    createdAt: 0,
+    updatedAt: 0,
+  }))
 
   // 加载文章列表
   useEffect(() => {
@@ -214,6 +223,16 @@ export function ArticleList({ onSelect, currentContent, onNew }: ArticleListProp
     setEditingTitle('')
   }
 
+  const selectBuiltInExample = (article: Article) => {
+    onSelect(article)
+    setIsOpen(false)
+    toast({
+      title: '示例已载入',
+      description: `已加载 ${article.title}，并切换到 ${article.template} 模板`,
+      duration: 2000
+    })
+  }
+
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -244,6 +263,31 @@ export function ArticleList({ onSelect, currentContent, onNew }: ArticleListProp
           </SheetHeader>
           <ScrollArea className="h-[calc(100vh-8rem)] mt-4">
             <div className="space-y-2">
+              <div className="pb-3 border-b">
+                <div className="px-2 pb-2 text-xs font-medium tracking-wide text-muted-foreground">
+                  内置示例
+                </div>
+                <div className="space-y-1">
+                  {builtInExamples.map((article) => (
+                    <button
+                      key={article.id}
+                      onClick={() => selectBuiltInExample(article)}
+                      className="w-full rounded-md border border-border/70 bg-muted/30 px-3 py-2 text-left transition-colors hover:bg-muted"
+                    >
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium truncate">{article.title}</div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            模板：{article.template}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {articles.map(article => (
                 <div
                   key={article.id}
