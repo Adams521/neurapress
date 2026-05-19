@@ -58,3 +58,4 @@ Thumbs.db
 .cache/
 .npm/
 .pnpm-store/ 
+.superpowers/
