@@ -25,6 +25,28 @@
 
 你可以把它理解成整条渲染链的状态中心。
 
+### 1.1 新增入口：`ArticleList` 内置示例
+
+现在除了手工输入和本地文章选择，还多了一条入口：
+
+- `src/components/ArticleList.tsx` 的“内置示例”分组
+
+示例源定义在：
+
+- `src/lib/utils/loadExampleContent.ts`
+
+每个示例会携带：
+
+- `content`（Markdown）
+- `template`（模板 ID）
+
+点击示例后，`WechatEditor.handleArticleSelect()` 会同时更新：
+
+- `value`
+- `selectedTemplate`
+
+所以示例加载不是单纯换文本，而是“内容 + 样式”一起切换。
+
 ## 2. 编辑器输入后发生什么
 
 当用户在文本框输入时：
@@ -34,6 +56,8 @@
 3. `usePreviewContent` 会因为依赖变化重新计算预览内容
 
 所以渲染不是手动触发，而是标准 React 状态驱动。
+
+当用户从 `ArticleList` 选择内置示例时，也会走同样的状态驱动链，只是状态源不是键盘输入，而是 `onArticleSelect`。
 
 ## 3. `usePreviewContent` 是预览链的核心
 

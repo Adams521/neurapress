@@ -100,6 +100,20 @@ NeuraPress 的模板不是完整 HTML 文件库，而是内存中的模板配置
 
 所以两个项目的模板系统虽然都叫“模板”，但抽象层级完全不同。
 
+## 5.1 内置示例与模板绑定
+
+最新实现里，`ArticleList` 顶部增加了“内置示例”分组，示例内容来自：
+
+- `src/lib/utils/loadExampleContent.ts`
+
+每个内置示例都带有目标模板 ID（例如 `agent-deep-dive`、`ai-weekly-brief`、`oss-showcase`）。  
+用户点击示例后，会通过 `onSelect(article)` 一次性载入：
+
+- 示例 Markdown 内容
+- 对应模板 ID
+
+这让“示例内容”和“模板样式”形成了可直接复用的组合，而不是手动先选文章再选模板。
+
 ## 6. 渲染层的职责
 
 `MarkdownRenderer` 会接管很多标准 markdown 元素的输出：
